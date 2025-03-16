@@ -7,16 +7,19 @@ import com.DTUHackathon.Executive4.O.DTO.LawyerSignupDTO;
 import com.DTUHackathon.Executive4.O.Models.LawyerModel;
 import com.DTUHackathon.Executive4.O.Repository.LawyerRepo;
 import com.DTUHackathon.Executive4.O.Service.LawyerService;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/lawyers")
+@CrossOrigin(origins = {
+        "http://localhost:5173",
+        "https://rentrite-live.vercel.app"
+}, allowCredentials = "true")
 public class LawyerConroller {
 
      private final LawyerRepo lawyerRepo;
