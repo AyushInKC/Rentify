@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users/uploadPhoto/**","/lawyers/uploadPhoto/**").permitAll()
-                        .requestMatchers("/users/login", "/users/signup", "/users/**", "/lawyers/**").permitAll()
+                        .requestMatchers("/users/login", "/users/signup", "/users/**", "/lawyers/**","/api/video/generate-meeting").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
