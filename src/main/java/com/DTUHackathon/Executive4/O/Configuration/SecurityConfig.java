@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .and()
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/login","/users/signup","/users/**","/lawyers/**","/chat","/lawyers/**,/lawyer/signup","/lawyer/login","/lawyer/update/{email}","/users/update/{email}").permitAll()
+                        .requestMatchers("/users/login","/users/signup","/users/**","/lawyers/**","/chat","/lawyers/**,/lawyer/signup","/lawyer/login","/lawyer/update/{email}","/users/update/{email}","/api/video/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
