@@ -4,7 +4,6 @@ import com.DTUHackathon.Executive4.O.Security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,7 +13,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 import static org.springframework.security.config.Customizer.withDefaults;
+
 
 @Configuration
 @EnableWebSecurity
@@ -38,15 +40,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .cors(withDefaults())
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for uploads
+                .cors(withDefaults()) // Ensure CORS is correctly configured
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/login","/users/signup","/users/**","/lawyers/**","/chat","/lawyers/**,/lawyer/signup","/lawyer/login","/lawyer/update/{email}","/users/update/{email}","/api/video/**","/users/update/{email}").permitAll()
+                        .requestMatchers("/users/uploadPhoto/**").permitAll() // ✅ Allow file uploads
+                        .requestMatchers("/users/login", "/users/signup", "/users/**", "/lawyers/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 }
