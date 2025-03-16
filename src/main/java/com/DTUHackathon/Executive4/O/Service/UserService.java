@@ -7,6 +7,8 @@ import com.DTUHackathon.Executive4.O.DTO.UserUpdateDTO;
 import com.DTUHackathon.Executive4.O.Models.UserModel;
 import com.DTUHackathon.Executive4.O.Repository.UserRepo;
 import com.DTUHackathon.Executive4.O.Utils.JWTUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +19,7 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
     private final JWTUtility jwtUtility;
@@ -41,19 +43,35 @@ public class UserService {
     }
 
     public UserLoginResponseDTO login(UserLoginDTO loginRequest) {
-        Optional<UserModel> userOptional = userRepo.findByEmail(loginRequest.getEmail());
+        try {
+            Optional<UserModel> userOptional = userRepo.findByEmail(loginRequest.getEmail());
 
-        if (userOptional.isEmpty() || !passwordEncoder.matches(loginRequest.getPassword(), userOptional.get().getPassword())) {
-            throw new RuntimeException("Invalid email or password");
+            if (userOptional.isEmpty()) {
+                logger.error("User not found with email: {}", loginRequest.getEmail());
+                throw new RuntimeException("Invalid email or password");
+            }
+
+            UserModel user = userOptional.get();
+            logger.info("User found: {}", user.getEmail());
+
+            if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+                logger.error("Password mismatch for user: {}", loginRequest.getEmail());
+                throw new RuntimeException("Invalid email or password");
+            }
+
+            logger.info("Generating access token...");
+            String accessToken = jwtUtility.generateAccessToken(user.getEmail());  // Ensure proper token generation
+            String refreshToken = jwtUtility.generateRefreshToken(user.getEmail());
+
+            logger.info("Login successful for user: {}", user.getEmail());
+            return new UserLoginResponseDTO(accessToken, refreshToken, user.getEmail());
+
+        } catch (Exception e) {
+            logger.error("Unexpected error during login: ", e);
+            throw new RuntimeException("An error occurred during login");
         }
-
-        UserModel user = userOptional.get();
-
-        String accessToken = jwtUtility.generateAccessToken(String.valueOf(user));
-        String refreshToken = jwtUtility.generateRefreshToken(String.valueOf(user));
-
-        return new UserLoginResponseDTO(accessToken, refreshToken, user.getName());
     }
+
 
     public String updateUserDetails(String email, UserUpdateDTO updatedUser) {
         Optional<UserModel> userOptional = userRepo.findByEmail(email);

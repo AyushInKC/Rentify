@@ -7,14 +7,13 @@ import com.DTUHackathon.Executive4.O.DTO.UserUpdateDTO;
 import com.DTUHackathon.Executive4.O.Models.UserModel;
 import com.DTUHackathon.Executive4.O.Repository.UserRepo;
 import com.DTUHackathon.Executive4.O.Service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.plaf.multi.MultiPanelUI;
-import java.lang.management.MemoryUsage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +22,7 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserController {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final UserRepo userRepo;
     public UserController(UserService userService, UserRepo userRepo){
@@ -41,19 +40,16 @@ public class UserController {
         try {
             UserLoginResponseDTO response = userService.login(userLoginRequestDTO);
 
-            if (response != null) {
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("accessToken", response.getAccessToken());
+            responseBody.put("refreshToken", response.getRefreshToken());
+            responseBody.put("email", response.getEmail());
 
-                Map<String, Object> responseBody = new HashMap<>();
-                responseBody.put("accessToken", response.getAccessToken());
-                responseBody.put("refreshToken", response.getRefreshToken());
-                responseBody.put("name", response.getName());
-
-                return ResponseEntity.ok(responseBody);
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-            }
+            return ResponseEntity.ok(responseBody);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during login");
+            logger.error("Login error: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred during login. Check server logs.");
         }
     }
 
