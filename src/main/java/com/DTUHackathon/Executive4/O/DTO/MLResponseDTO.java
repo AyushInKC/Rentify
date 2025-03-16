@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MLResponseDTO {
-    private String reply;
+    private String response;
 }

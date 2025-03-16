@@ -7,7 +7,6 @@ import lombok.Data;
 public class LawyerLoginResponseDTO {
     private String accessToken;
     private String refreshToken;
-
     public LawyerLoginResponseDTO(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;

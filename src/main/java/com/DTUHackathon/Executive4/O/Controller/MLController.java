@@ -3,6 +3,7 @@ package com.DTUHackathon.Executive4.O.Controller;
 import com.DTUHackathon.Executive4.O.DTO.MLRequestDTO;
 import com.DTUHackathon.Executive4.O.DTO.MLResponseDTO;
 import com.DTUHackathon.Executive4.O.Service.MLService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,7 @@ public class MLController {
         this.mlService = mlService;
     }
     @PostMapping
-    public ResponseEntity<MLResponseDTO> chat(@RequestBody MLRequestDTO message) {
+    public ResponseEntity<MLResponseDTO> chat(@Valid @RequestBody MLRequestDTO message) {
         MLResponseDTO response = mlService.getChatResponse(message);
         return ResponseEntity.ok(response);
     }
