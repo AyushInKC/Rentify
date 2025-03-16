@@ -1,6 +1,5 @@
 package com.DTUHackathon.Executive4.O.Controller;
 
-import com.DTUHackathon.Executive4.O.DTO.LawyerAddRequest;
 import com.DTUHackathon.Executive4.O.Models.LawyerModel;
 import com.DTUHackathon.Executive4.O.Repository.LawyerRepo;
 import com.DTUHackathon.Executive4.O.Service.LawyerService;

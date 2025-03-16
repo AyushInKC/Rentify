@@ -18,7 +18,6 @@ public class MLController {
     public MLController(MLService mlService){
         this.mlService = mlService;
     }
-
     @PostMapping
     public ResponseEntity<MLResponseDTO> chat(@RequestBody MLRequestDTO message) {
         MLResponseDTO response = mlService.getChatResponse(message);

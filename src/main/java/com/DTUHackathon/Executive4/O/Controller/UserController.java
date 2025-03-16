@@ -4,8 +4,6 @@ import com.DTUHackathon.Executive4.O.DTO.UserLoginDTO;
 import com.DTUHackathon.Executive4.O.DTO.UserLoginResponseDTO;
 import com.DTUHackathon.Executive4.O.DTO.UserSignUpDTO;
 import com.DTUHackathon.Executive4.O.DTO.UserUpdateDTO;
-import com.DTUHackathon.Executive4.O.Models.UserModel;
-import com.DTUHackathon.Executive4.O.Repository.UserRepo;
 import com.DTUHackathon.Executive4.O.Service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
