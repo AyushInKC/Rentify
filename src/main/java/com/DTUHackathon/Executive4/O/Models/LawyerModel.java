@@ -17,4 +17,9 @@ public class LawyerModel {
     private String designation;
     private String qualification;
     private String district;
+    private String email;
+    private String gender;
+    private String password;
+   private String age;
+
 }

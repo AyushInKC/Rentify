@@ -1,5 +1,9 @@
 package com.DTUHackathon.Executive4.O.Controller;
 
+import com.DTUHackathon.Executive4.O.DTO.LawyerLoginRequestDTO;
+import com.DTUHackathon.Executive4.O.DTO.LawyerLoginResponseDTO;
+import com.DTUHackathon.Executive4.O.DTO.LawyerUpdateDTO;
+import com.DTUHackathon.Executive4.O.DTO.LawyerSignupDTO;
 import com.DTUHackathon.Executive4.O.Models.LawyerModel;
 import com.DTUHackathon.Executive4.O.Repository.LawyerRepo;
 import com.DTUHackathon.Executive4.O.Service.LawyerService;
@@ -20,6 +24,25 @@ public class LawyerConroller {
         this.lawyerRepo=lawyerRepo;
         this.lawyerService =lawyerService ;
     }
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody LawyerSignupDTO lawyerSignupDTO){
+        String response = lawyerService.signup(lawyerSignupDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LawyerLoginRequestDTO lawyerLoginRequestDTO){
+        LawyerLoginResponseDTO response = lawyerService.login(lawyerLoginRequestDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/update/{email}")
+    public ResponseEntity<String> updateDetails(@PathVariable String email, @RequestBody LawyerUpdateDTO lawyerUpdateDTO) {
+        String response = lawyerService.updateLawyerDetails(email, lawyerUpdateDTO);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/by-name")
     public ResponseEntity<?> findLawyerByName(@RequestParam String name){
         List<LawyerModel> lawyers=lawyerService.findLawyerByName(name);
