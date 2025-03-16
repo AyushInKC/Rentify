@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/uploadPhoto/**","/lawyers/uploadPhoto/**").permitAll()
+                        .requestMatchers("/users/uploadPhoto/**","/lawyers/uploadPhoto/**","/chat").permitAll()
                         .requestMatchers("/users/login","/lawyers/login","/lawyers/signup", "/users/signup", "/users/**", "/lawyers/**","/api/video/generate-meeting","/chat").permitAll()
                         .anyRequest().authenticated()
                 )
