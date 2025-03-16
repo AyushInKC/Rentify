@@ -7,6 +7,7 @@
     import com.DTUHackathon.Executive4.O.Models.UserModel;
     import com.DTUHackathon.Executive4.O.Repository.UserRepo;
     import com.DTUHackathon.Executive4.O.Utils.JWTUtility;
+    import org.springframework.security.authentication.BadCredentialsException;
     import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.stereotype.Service;
 
@@ -37,12 +38,12 @@
         public UserLoginResponseDTO login(UserLoginDTO loginDTO) {
             Optional<UserModel> user = userRepo.findByEmail(loginDTO.getEmail());
 
-            if (((Optional<?>) user).isPresent() && passwordEncoder.matches(loginDTO.getPassword(), user.get().getPassword())) {
+            if (user.isPresent() && passwordEncoder.matches(loginDTO.getPassword(), user.get().getPassword())) {
                 String accessToken = jwtUtility.generateAccessToken(loginDTO.getEmail());
                 String refreshToken = jwtUtility.generateRefreshToken(loginDTO.getEmail());
                 return new UserLoginResponseDTO(accessToken, refreshToken);
             } else {
-                throw new RuntimeException("Invalid email or password!");
+                throw new BadCredentialsException("Invalid email or password!");
             }
         }
 
