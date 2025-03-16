@@ -1,6 +1,5 @@
 package com.DTUHackathon.Executive4.O.Service;
 
-
 import com.DTUHackathon.Executive4.O.DTO.LawyerLoginRequestDTO;
 import com.DTUHackathon.Executive4.O.DTO.LawyerLoginResponseDTO;
 import com.DTUHackathon.Executive4.O.DTO.LawyerSignupDTO;
@@ -10,7 +9,9 @@ import com.DTUHackathon.Executive4.O.Repository.LawyerRepo;
 import com.DTUHackathon.Executive4.O.Utils.JWTUtility;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -108,4 +109,28 @@ public class LawyerService {
             return "Lawyer with email " + email + " not found!";
         }
     }
+
+    public String uploadPhoto(String name, MultipartFile file) {
+        try {
+            List<LawyerModel> lawyers = lawyerRepo.findByNameContainingIgnoreCase(name);
+
+            if (lawyers.isEmpty()) {
+                return "Lawyer not found!";
+            }
+
+            if (lawyers.size() > 1) {
+                return "Multiple lawyers found with the same name. Please provide more details.";
+            }
+
+            LawyerModel lawyer = lawyers.get(0);
+            lawyer.setProfilePhoto(file.getBytes());
+            lawyerRepo.save(lawyer);
+
+            return "Profile photo uploaded successfully!";
+        } catch (IOException e) {
+            return "Error uploading photo: " + e.getMessage();
+        }
+    }
+
+
 }

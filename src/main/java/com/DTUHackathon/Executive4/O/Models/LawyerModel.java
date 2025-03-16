@@ -1,5 +1,7 @@
 package com.DTUHackathon.Executive4.O.Models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Document(collection = "lawyers")
 @Data
+@Entity
 public class LawyerModel {
     @Id
     private String id;
@@ -21,5 +24,7 @@ public class LawyerModel {
     private String gender;
     private String password;
    private String age;
+    @Lob
+    private byte[] profilePhoto;
 
 }

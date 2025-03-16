@@ -7,10 +7,13 @@ import com.DTUHackathon.Executive4.O.DTO.LawyerSignupDTO;
 import com.DTUHackathon.Executive4.O.Models.LawyerModel;
 import com.DTUHackathon.Executive4.O.Repository.LawyerRepo;
 import com.DTUHackathon.Executive4.O.Service.LawyerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/lawyers")
@@ -34,6 +37,12 @@ public class LawyerConroller {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LawyerLoginRequestDTO lawyerLoginRequestDTO){
         LawyerLoginResponseDTO response = lawyerService.login(lawyerLoginRequestDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/uploadPhoto/{name}")
+    public ResponseEntity<?> uploadPhoto(@PathVariable String name, @RequestParam("file") MultipartFile file) {
+        String response = lawyerService.uploadPhoto(name, file);
         return ResponseEntity.ok(response);
     }
 
@@ -76,4 +85,5 @@ public class LawyerConroller {
         List<LawyerModel> lawyers=lawyerService.listAll();
         return lawyers.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(lawyers);
     }
+
 }

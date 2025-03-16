@@ -9,7 +9,10 @@ import com.DTUHackathon.Executive4.O.Repository.UserRepo;
 import com.DTUHackathon.Executive4.O.Utils.JWTUtility;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -65,5 +68,23 @@ public class UserService {
             return "User details updated successfully!";
         }
         return "User not found!";
+    }
+
+    public String uploadPhoto(String name, MultipartFile file) {
+        try {
+            List<UserModel> users = userRepo.findByNameContainingIgnoreCase(name);
+
+            if (users.isEmpty()) {
+                return "Lawyer not found!";
+            }
+
+            UserModel user = users.get(0);
+            user.setProfilePhoto(file.getBytes());
+            userRepo.save(user);
+
+            return "Profile photo uploaded successfully!";
+        } catch (IOException e) {
+            return "Error uploading photo: " + e.getMessage();
+        }
     }
 }
