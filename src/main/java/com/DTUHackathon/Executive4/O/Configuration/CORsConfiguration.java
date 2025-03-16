@@ -16,7 +16,10 @@ public class CORsConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://rentrite-live.vercel.app")
+                        .allowedOrigins(
+                                "http://localhost:5173",
+                                "https://rentrite-live.vercel.app"
+                        )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
