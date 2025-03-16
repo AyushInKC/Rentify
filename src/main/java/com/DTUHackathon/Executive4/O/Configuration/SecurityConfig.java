@@ -40,10 +40,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for uploads
-                .cors(withDefaults()) // Ensure CORS is correctly configured
+                .csrf(csrf -> csrf.disable())
+                .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/uploadPhoto/**").permitAll() // ✅ Allow file uploads
+                        .requestMatchers("/users/uploadPhoto/**","/lawyers/uploadPhoto/**").permitAll()
                         .requestMatchers("/users/login", "/users/signup", "/users/**", "/lawyers/**").permitAll()
                         .anyRequest().authenticated()
                 )
