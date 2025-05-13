@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MLController {
 
     private final MLService mlService;
+
     private static final Logger logger = LoggerFactory.getLogger(MLController.class);
     public MLController(MLService mlService){
         this.mlService = mlService;

@@ -1,22 +1,9 @@
+FROM openjdk:17-jdk-slim
 
-FROM openjdk:21-jdk AS build
-WORKDIR /Executive4.O
-COPY pom.xml .
-COPY src src
+WORKDIR /app
 
-# Copy Maven wrapper
-COPY mvnw .
-COPY .mvn .mvn
+COPY target/Executive4.O-0.0.1-SNAPSHOT.jar app.jar
 
-# Set execution permission for the Maven wrapper
-RUN chmod +x ./mvnw
-RUN ./mvnw clean package -DskipTests
-
-# Stage 2: Create the final Docker image using OpenJDK 19
-FROM openjdk:17-jdk
-VOLUME /tmp
-
-# Copy the JAR from the build stage
-COPY --from=build /Executive4.O/target/*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
 EXPOSE 8080
+
+CMD ["java", "-Xmx256m", "-Xms128m", "-jar","app.jar"]
