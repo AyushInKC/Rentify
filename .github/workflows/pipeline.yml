@@ -1,5 +1,5 @@
-
 name: CI/CD Pipeline
+
 on:
   push:
     branches:
@@ -33,22 +33,25 @@ jobs:
           docker tag ${{ secrets.DOCKER_USERNAME }}/executive4.o:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/executive4.o:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/executive4.o:${{ github.sha }}
           docker push ${{ secrets.DOCKER_USERNAME }}/executive4.o:latest
-        env:
-          TAG: ${{ github.sha }}
 
   deploy:
     needs: build
-    runs-on: [ self-hosted ]
+    runs-on: [self-hosted]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Stop current service (mandatory downtime)
+        run: |
+          docker compose down
 
-      - name: Deploy with Docker Compose
+      - name: Pull latest image from Docker Hub
+        run: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/executive4.o:latest
+
+      - name: Start service
         run: |
           docker compose up -d
 
       - name: Notify Slack of Deployment
         run: |
           curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"✅ Deployment to EC2 completed successfully!"}' \
+          --data '{"text":"✅ Deployment to VM with downtime completed successfully!"}' \
           ${{ secrets.SLACK_WEBHOOK_URL }}
